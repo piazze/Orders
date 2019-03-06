@@ -24,6 +24,9 @@ public class OrdersMapperImplTest {
 	public void testQueryAll2() throws IOException {
 		OrdersMapper mapper = new OrdersMapperImpl();
 		List<Orders> queryAll = mapper.queryAll2();
-		queryAll.stream().forEach(System.out::println);
+		//queryAll.stream().forEach(System.out::println);
+		for (Orders orders : queryAll) {
+			System.out.println(orders);
+		}
 	}
 }

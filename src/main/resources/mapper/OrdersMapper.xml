@@ -21,7 +21,7 @@
 					此时，为了解决列名重复的问题，我们可以通过为列指定别名。
 					通过columnPrefix为列名指定统一的前缀，mybatis在映射列名时，会根据前缀自动的分类。
 		 -->
-		<association property="user" javaType="user" columnPrefix="u_">
+		<association property="user" javaType="user" columnPrefix="u_" >
 			<!-- 
 				id节点中的property：user类中的主键属性
 				column：orders表中的user外键。orders表中有个user_id的外键。
@@ -69,8 +69,8 @@
 					在本mapper中添加一个根据用户id查询用户信息的statement。因此我们在userMapper中添加工具用户id查询用户信息
 					在本mapper中通过命名空间.findUserById查询用户。
 		 -->
-		<association property="user" javaType="user" column="user_id" select="com.hxzy.mapper.UserMapper.findById" />
-		<collection property="details" javaType="ArrayList" ofType="ordersDetail" column="id" select="com.hxzy.mapper.OrdersDetailMapper.queryByOrderid" />
+		<association fetchType="lazy" property="user" javaType="user" column="user_id" select="com.hxzy.mapper.UserMapper.findById" />
+		<collection fetchType="lazy" property="details" javaType="ArrayList" ofType="ordersDetail" column="id" select="com.hxzy.mapper.OrdersDetailMapper.queryByOrderid"  />
 	</resultMap>
 	
 	<resultMap type="orders" id="ordersResultMap">

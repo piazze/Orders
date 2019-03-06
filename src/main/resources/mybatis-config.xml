@@ -10,6 +10,10 @@
   <settings>
   	<!-- 通过log4j打印mybatis执行的sql语句 -->
   	<setting name="logImpl" value="LOG4J" />
+  	
+  	<!-- 开启延迟加载 -->
+  	<!-- <setting name="lazyLoadingEnabled" value="true"/> -->
+  	
   	<!-- 开启mybatis二级缓存 -->
   	<setting name="cacheEnabled" value="true"/>
   </settings>
