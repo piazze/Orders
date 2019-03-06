@@ -32,9 +32,57 @@
 			<result column="sex" property="sex"/>
 			<result column="address" property="address"/>
 		</association>
+		
+		<!-- 
+			property:映射的POJO中的属性，此处为Orders类中的details集合
+			ofType：ofType指集合中每个元素的完整类型。
+			在关联查询及集合中编写id和result适用于多表连接查询
+			总结：
+				在关联查询及集合中，配置id，result节点。因为查询的SQL语句中包括了需要的所有的列。
+				通过配置id及result节点的目的，就是为了将查询出的列对应的值包装为我们指定的对象（关联）或集合(collection)
+		 -->
+		<collection property="details" ofType="ordersDetail" columnPrefix="d_">
+			<id column="id" property="id"/>
+			<result column="itemId" property="itemId"/>
+			<result column="itemNum" property="itemNum"/>
+			<result column="ordersId" property="ordersId"/>
+		</collection>
 	</resultMap>
 	
-	<select id="queryAll" resultMap="queryAllResultMap">
+	<!-- 通过查询实现关联 -->
+	<resultMap type="orders" id="queryAllResultMap2">
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="number" property="number"/>
+		<result column="createtime" property="createtime"/>
+		<result column="note" property="note"/>
+		
+		<!-- 
+			property：orders类中的user属性
+			javaType：com.hxzy.entity.User的类型。
+			column：将order表中哪个列传递到select指向的id的statement中查询。
+					orders表中通过user_id和用户表进行关联，因此我们希望将orders对应的用户查询出，只需要
+					将每条orders中的user_id的值传递给另外一个根据id查询用户的sql语句即可
+			select:要执行哪个statement的sql语句。如果在本mapper中直接写id即可，如果要查询的statement位于另外一个
+					mapper中，需要通过命名空间.id进行查询。
+					分析：通过用户id查询用户通常是不是每个映射文件中都需要包含。因此为了实现本mapper中的功能，完全没有必要
+					在本mapper中添加一个根据用户id查询用户信息的statement。因此我们在userMapper中添加工具用户id查询用户信息
+					在本mapper中通过命名空间.findUserById查询用户。
+		 -->
+		<association property="user" javaType="user" column="user_id" select="com.hxzy.mapper.UserMapper.findById" />
+		<collection property="details" javaType="ArrayList" ofType="ordersDetail" column="id" select="com.hxzy.mapper.OrdersDetailMapper.queryByOrderid" />
+	</resultMap>
+	
+	<resultMap type="orders" id="ordersResultMap">
+		<!-- 指定数据库中唯一标示列 -->
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="number" property="number"/>
+		<result column="createtime" property="createtime"/>
+		<result column="note" property="note"/>
+	</resultMap>
+	
+	<select id="queryAll" resultMap="queryAllResultMap" parameterType="orders">
 		select 
 			o.id,
 			o.user_id,
@@ -45,9 +93,30 @@
 			u.username u_username,
 			u.birthday u_birthday,
 			u.sex u_sex,
-			u.address u_address
+			u.address u_address,
+			d.id d_id,
+			d.items_id d_itemId,
+			d.items_num d_itemNum,
+			d.orders_id d_ordersId
 		from `orders` o
 		inner join `user` u
 		on o.user_id = u.id
+		inner join `orderdetail` d
+		on o.id = d.orders_id
+		<where>
+			<if test="userId != null">
+				and o.user_id = #{userId}
+			</if>
+			<if test="number != null and number != ''">
+				and o.number = #{number}
+			</if>
+		</where>
+	</select>
+	<select id="queryAll2" resultMap="queryAllResultMap2">
+		select * from orders
+	</select>
+	
+	<select id="findById" parameterType="Integer" resultMap="ordersResultMap">
+		select * from orders where id = #{id}
 	</select>
 </mapper>

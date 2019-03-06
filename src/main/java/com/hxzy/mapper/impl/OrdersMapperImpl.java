@@ -36,4 +36,38 @@ public class OrdersMapperImpl implements OrdersMapper {
 		return null;
 	}
 
+
+	@Override
+	public List<Orders> queryAll2() {
+		SqlSession session = factory.openSession();
+		try {
+			OrdersMapper mapper = session.getMapper(OrdersMapper.class);
+			List<Orders> list = mapper.queryAll2();
+			return list;
+		} catch (Exception e) {
+			//实际工作中，异常信息是需要通过日志文件记录并保存。
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+
+
+	@Override
+	public Orders findById(Integer id) {
+		SqlSession session = factory.openSession();
+		try {
+			OrdersMapper mapper = session.getMapper(OrdersMapper.class);
+			Orders orders = mapper.findById(id);
+			return orders;
+		} catch (Exception e) {
+			//实际工作中，异常信息是需要通过日志文件记录并保存。
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+
 }

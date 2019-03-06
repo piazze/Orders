@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- 编写sql语句的配置文件，对应mapper接口 -->
+<mapper namespace="com.hxzy.mapper.OrdersDetailMapper">
+	<resultMap type="ordersDetail" id="queryAllResultMap">
+		<!-- 指定数据库中唯一标示列 -->
+		<id column="id" property="id"/>
+		<result column="orders_id" property="ordersId"/>
+		<result column="items_id" property="itemId"/>
+		<result column="items_num" property="itemNum"/>
+		
+		<!-- 
+		property：orders类中的user属性
+		javaType:要关联的对象的java类型
+		
+		columnPrefix:多张表进行连接查询时，如果有多个不同的列具有同名时，并且该重名的列的含义是不同的，
+					此时，为了解决列名重复的问题，我们可以通过为列指定别名。
+					通过columnPrefix为列名指定统一的前缀，mybatis在映射列名时，会根据前缀自动的分类。
+		 -->
+		 <association property="orders" javaType="orders" column="orders_id" select="com.hxzy.mapper.OrdersMapper.findById" />
+		 <association property="item" javaType="item" column="items_id" select="com.hxzy.mapper.ItemMapper.findById" />
+	</resultMap>
+	
+	
+	<select id="queryByOrderid" parameterType="Integer" resultMap="queryAllResultMap">
+		select * from orderdetail d where d.orders_id = #{id}
+	</select>
+</mapper>
