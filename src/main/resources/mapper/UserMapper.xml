@@ -31,7 +31,13 @@
 		
 	</resultMap>
 	
-	<select flushCache="true" id="findById" parameterType="Integer" resultMap="findByIdResultMap">
+	<!-- 
+		 flushCache="true"   ,对于更新频率比较高的表，每次查询时都必须保证数据和数据库是一致的
+		 因此这种情况不能使用一级缓存，如果使用了一级缓存，本地缓存的数据很 有可能和数据库的数据不不一致。
+		 造成数据库脏读的情况的出现。
+	
+	 -->
+	<select id="findById" parameterType="Integer" resultMap="findByIdResultMap">
 		select * from `user` where `id` = #{id}
 	</select>
 	
