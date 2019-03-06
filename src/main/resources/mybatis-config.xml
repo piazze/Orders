@@ -10,6 +10,8 @@
   <settings>
   	<!-- 通过log4j打印mybatis执行的sql语句 -->
   	<setting name="logImpl" value="LOG4J" />
+  	<!-- 开启mybatis二级缓存 -->
+  	<setting name="cacheEnabled" value="true"/>
   </settings>
   
   <typeAliases>
@@ -54,5 +56,7 @@
   <mappers>
     <mapper resource="mapper/UserMapper.xml"/>
     <mapper resource="mapper/OrdersMapper.xml"/>
+    <mapper resource="mapper/OrdersDetailMapper.xml"/>
+    <mapper resource="mapper/ItemMapper.xml"/>
   </mappers>
 </configuration>

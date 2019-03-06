@@ -1,6 +1,7 @@
 package com.hxzy.entity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单
@@ -17,6 +18,9 @@ public class Orders {
 	
 	//一个订单对应一个用户
 	private User user;
+	
+	//一个订单对应多个订单明细  1:N
+	private List<OrdersDetail> details;
 
 	public Integer getId() {
 		return id;
@@ -66,10 +70,37 @@ public class Orders {
 		this.user = user;
 	}
 
+	
+	public List<OrdersDetail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<OrdersDetail> details) {
+		this.details = details;
+	}
+
 	@Override
 	public String toString() {
 		return "Orders [id=" + id + ", userId=" + userId + ", number=" + number + ", createtime=" + createtime
-				+ ", note=" + note + ", user=" + user + "]";
-	} 
+				+ ", note=" + note + ", user=" + user + ", details=" + details + "]";
+	}
+
+	public Orders(Integer id, Integer userId, String number, Date createtime, String note, User user,
+			List<OrdersDetail> details) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.number = number;
+		this.createtime = createtime;
+		this.note = note;
+		this.user = user;
+		this.details = details;
+	}
+
+	public Orders() {
+		super();
+	}
+
+	
 	
 }
